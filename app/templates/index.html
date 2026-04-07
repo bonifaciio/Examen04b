@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Descargador de Videos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="page-bg"></div>
+  <main class="wrap">
+    <section class="card hero">
+      <h1>Descargador de Instagram</h1>
+      <p>Descarga reels y videos de Instagram desde localhost.</p>
+    </section>
+
+    <section class="card panel">
+      <form method="post" class="download-form">
+        <label for="url">URL del video</label>
+        <input id="url" name="url" type="url" required placeholder="https://www.instagram.com/reel/...">
+        <button type="submit">Descargar Video</button>
+      </form>
+
+      {% if error %}
+      <div class="notice error">{{ error }}</div>
+      {% endif %}
+
+      {% if resultado %}
+      <div class="notice success">
+        <h2>Descarga Exitosa</h2>
+        <p><strong>Plataforma:</strong> {{ resultado.plataforma }}</p>
+        <p><strong>Fecha:</strong> {{ resultado.fecha }}</p>
+        <a class="download-link" href="{{ url_for('download_file', filename=resultado.archivo) }}">Descargar Archivo</a>
+        {% if resultado.aviso %}
+        <p class="tip">{{ resultado.aviso }}</p>
+        {% endif %}
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="card history">
+      <h2>Historial</h2>
+      {% if historial %}
+      <ul>
+        {% for item in historial[:12] %}
+        <li>
+          <span class="meta">{{ item.fecha }} · {{ item.plataforma }}</span>
+          <a href="{{ url_for('download_file', filename=item.archivo) }}">{{ item.archivo }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="empty">Aun no hay descargas registradas.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>
